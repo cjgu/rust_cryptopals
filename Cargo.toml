@@ -1,0 +1,30 @@
+[package]
+name = "challenge"
+version = "0.1.0"
+authors = ["Carl Johan Gustavsson <cjg@prng.se>"]
+
+[[bin]]
+name = "hex"
+path = "src/hex.rs"
+
+[[bin]]
+name = "xor"
+path = "src/xor_bin.rs"
+
+[[bin]]
+name = "xor_search_single_char"
+path = "src/xor_search_single_char_bin.rs"
+
+[[bin]]
+name = "find_single_single_char_xor_string"
+path = "src/find_single_char_xor_string_bin.rs"
+
+[[bin]]
+name = "encrypt_xor"
+path = "src/encrypt_xor_bin.rs"
+
+[[bin]]
+name = "break_repeating_key_xor"
+path = "src/break_repeating_key_xor_bin.rs"
+
+[dependencies]
