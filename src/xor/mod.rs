@@ -1,4 +1,5 @@
 use std::char;
+use itertools::Itertools;
 
 pub fn xor(a: &Vec<u8>, b: &Vec<u8>) -> Vec<u8> {
     assert_eq!(a.len(), b.len());
@@ -12,6 +13,18 @@ pub fn repeating_key(key: &Vec<u8>, length: usize) -> Vec<u8> {
         out.push(key[i % key.len()]);
     }
     out
+}
+
+pub fn break_repeating_key(key_size: usize, cryptotext: &Vec<u8>) -> Vec<u8> {
+    let mut full_key = Vec::with_capacity(key_size);
+    for i in 0..key_size {
+        let (key, score) = search_single_char_key(
+            &cryptotext.iter().dropping(i).step(key_size).map(|&x| x).collect_vec()
+        );
+        full_key.push(key);
+    }
+
+    full_key
 }
 
 pub fn search_single_char_key(ciphertext: &Vec<u8>) -> (u8, u32) {
@@ -31,7 +44,7 @@ pub fn search_single_char_key(ciphertext: &Vec<u8>) -> (u8, u32) {
 
         let score = score_plaintext(&plaintext);
 
-        if score > highest_score {
+        if score >= highest_score {
             highest_score = score;
             high_score_key = ascii_key;
         }
@@ -55,20 +68,10 @@ pub fn score_plaintext(plaintext: &Vec<u8>) -> u32 {
         .fold(0, |acc, x| acc + x)
 }
 
-fn count_bits(byte: u8) -> u32 {
-    let mut count = 0;
-    let mut val = byte;
-    while val != 0 {
-        count += 1;
-        val &= (val - 1);
-    }
-    count
-}
-
 pub fn hamming_distance(a: &Vec<u8>, b: &Vec<u8>) -> u32 {
     let c = xor(a, b);
 
-    c.iter().map(|&x|count_bits(x)).fold(0, | acc, x| acc + x)
+    c.iter().map(|&x| x.count_ones()).fold(0, | acc, x| acc + x)
 }
 
 #[cfg(test)]
@@ -95,15 +98,6 @@ mod tests {
         let a: Vec<u8> = vec![1, 2, 3];
         let res: Vec<u8> = vec![1, 2, 3, 1, 2, 3];
         assert_eq!(res, repeating_key(&a, 6));
-    }
-
-    #[test]
-    fn test_count_bits() {
-        assert_eq!(0, super::count_bits(0));
-        assert_eq!(1, super::count_bits(1));
-        assert_eq!(1, super::count_bits(2));
-        assert_eq!(2, super::count_bits(3));
-        assert_eq!(8, super::count_bits(0xFF));
     }
 
     #[test]

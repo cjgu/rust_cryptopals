@@ -28,3 +28,4 @@ name = "break_repeating_key_xor"
 path = "src/break_repeating_key_xor_bin.rs"
 
 [dependencies]
+itertools="0.5.8"

@@ -1,3 +1,5 @@
+extern crate itertools;
+
 mod utils;
 mod xor;
 
