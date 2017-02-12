@@ -1,3 +1,8 @@
+use std::fs::File;
+use std::io::BufReader;
+use std::io::Read;
+use std::io::BufRead;
+
 pub fn decode_hex(hex_str: &str) -> Option<Vec<u8>> {
     let len = hex_str.len();
 
@@ -160,6 +165,17 @@ pub fn decode_b64(b64_str: &str) -> Vec<u8> {
     }
 
     out
+}
+
+pub fn load_file(file_path: &str) -> String {
+    let mut content = String::new();
+    let f = File::open(file_path).expect("Unable to open file");
+    let mut br = BufReader::new(f);
+    for line in br.lines() {
+        let l = line.unwrap();
+        content.push_str(&l);
+    }
+    content
 }
 
 

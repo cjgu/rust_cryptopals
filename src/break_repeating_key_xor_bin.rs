@@ -6,14 +6,11 @@ mod xor;
 use std::env;
 use std::char;
 use std::process;
-use std::fs::File;
-use std::io::BufReader;
-use std::io::Read;
-use std::io::BufRead;
 
 use utils::decode_hex;
 use utils::encode_hex;
 use utils::decode_b64;
+use utils::load_file;
 use xor::break_repeating_key;
 use xor::hamming_distance;
 use xor::repeating_key;
@@ -66,13 +63,7 @@ pub fn main() {
         process::exit(1);
     }
 
-    let mut ciphertext_b64 = String::new();
-    let f = File::open(&args[1]).expect("Unable to open file");
-    let mut br = BufReader::new(f);
-    for line in br.lines() {
-        let l = line.unwrap();
-        ciphertext_b64.push_str(&l);
-    }
+    let mut ciphertext_b64 = load_file(&args[1]);
 
     let ciphertext_bytes = decode_b64(&ciphertext_b64);
     println!("Input bytes: {:?}", ciphertext_bytes.len());
