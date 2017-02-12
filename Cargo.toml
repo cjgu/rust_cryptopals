@@ -31,6 +31,10 @@ path = "src/break_repeating_key_xor_bin.rs"
 name = "aes_ecb"
 path = "src/aes_ecb_bin.rs"
 
+[[bin]]
+name = "find_aes_ecb"
+path = "src/find_aes_ecb_bin.rs"
+
 [dependencies]
 itertools="0.5.8"
 openssl = "0.9.7"

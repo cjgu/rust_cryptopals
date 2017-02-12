@@ -178,6 +178,17 @@ pub fn load_file(file_path: &str) -> String {
     content
 }
 
+pub fn load_file_per_line(file_path: &str) -> Vec<String> {
+    let mut lines = Vec::new();
+    let f = File::open(file_path).expect("Unable to open file");
+    let mut br = BufReader::new(f);
+    for line in br.lines() {
+        let l = line.unwrap();
+        lines.push(l);
+    }
+    lines
+}
+
 
 #[cfg(test)]
 mod tests {
