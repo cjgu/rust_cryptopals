@@ -189,6 +189,15 @@ pub fn load_file_per_line(file_path: &str) -> Vec<String> {
     lines
 }
 
+pub fn pkcs_7_padding(buf: &Vec<u8>, block_size: usize) -> Vec<u8> {
+    let output_size = ((buf.len() / block_size) + 1) * block_size;
+    let pad: u8 = (output_size - buf.len()) as u8;
+    let mut output = buf.clone();
+    output.resize(output_size, pad);
+
+    output
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -290,6 +299,12 @@ mod tests {
         // This is the test case from the web page
         let output: Vec<u8> = decode_hex("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d").unwrap();
         assert_eq!(output, decode_b64("SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"));
+    }
+
+    #[test]
+    fn test_pkcs_7_pad_20() {
+        let input = b"YELLOW SUBMARINE".to_vec();
+        assert_eq!(b"YELLOW SUBMARINE\x04\x04\x04\x04".to_vec(), pkcs_7_padding(&input, 20))
     }
 
 }
