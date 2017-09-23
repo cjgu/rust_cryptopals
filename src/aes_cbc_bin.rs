@@ -8,13 +8,13 @@ mod xor;
 use std::env;
 use std::process;
 
-use aes::decrypt_128_ecb;
+use aes::decrypt_128_cbc;
 
 use utils::decode_b64;
 use utils::load_file;
 
 fn usage() {
-    println!("Usage: aes_ecb <file base64 encoded aes128 ecb ciphertext> <key>");
+    println!("Usage: aes_cbc <file> <key>");
     std::process::exit(-1);
 }
 
@@ -31,8 +31,10 @@ pub fn main() {
 
     let key = args[2].clone();
     let key_bytes = key.into_bytes();
+    let iv: Vec<u8> = vec![0; 16];
 
-    let plaintext = decrypt_128_ecb(&key_bytes, &ciphertext_bytes);
+    let plaintext = decrypt_128_cbc(&key_bytes, &ciphertext_bytes, &iv);
 
     println!("Plaintext:\n{}", String::from_utf8(plaintext).unwrap());
 }
+

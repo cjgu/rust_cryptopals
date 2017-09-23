@@ -32,9 +32,13 @@ name = "aes_ecb"
 path = "src/aes_ecb_bin.rs"
 
 [[bin]]
+name = "aes_cbc"
+path = "src/aes_cbc_bin.rs"
+
+[[bin]]
 name = "find_aes_ecb"
 path = "src/find_aes_ecb_bin.rs"
 
 [dependencies]
 itertools="0.5.8"
-openssl = "0.9.7"
+openssl = "0.9.19"
