@@ -2,6 +2,7 @@ use std::fs::File;
 use std::io::BufReader;
 use std::io::Read;
 use std::io::BufRead;
+use std::collections::HashSet;
 
 pub fn decode_hex(hex_str: &str) -> Option<Vec<u8>> {
     let len = hex_str.len();
@@ -200,6 +201,23 @@ pub fn pkcs_7_padding(buf: &Vec<u8>, block_size: usize) -> Vec<u8> {
     output.resize(output_size, pad_char);
 
     output
+}
+
+pub fn count_duplicate_blocks(bytes: &[u8], block_size: usize) -> (u32, u32) {
+    let mut duplicates = 0;
+    let mut chunks = 0;
+    let mut chunks_seen = HashSet::new();
+
+    for chunk in bytes.chunks(block_size)  {
+        if !chunks_seen.contains(chunk) {
+            chunks_seen.insert(chunk);
+        }
+        else {
+            duplicates += 1;
+        }
+        chunks += 1;
+    }
+    (duplicates, chunks)
 }
 
 

@@ -39,6 +39,11 @@ path = "src/aes_cbc_bin.rs"
 name = "find_aes_ecb"
 path = "src/find_aes_ecb_bin.rs"
 
+[[bin]]
+name = "oracle_ecb"
+path = "src/oracle_bin.rs"
+
 [dependencies]
 itertools="0.5.8"
 openssl = "0.9.19"
+rand = "0.3"

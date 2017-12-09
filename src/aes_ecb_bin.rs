@@ -32,7 +32,7 @@ pub fn main() {
     let key = args[2].clone();
     let key_bytes = key.into_bytes();
 
-    let plaintext = decrypt_128_ecb(&key_bytes, &ciphertext_bytes);
+    let plaintext = decrypt_128_ecb(&key_bytes, &ciphertext_bytes, false);
 
     println!("Plaintext:\n{}", String::from_utf8(plaintext).unwrap());
 }
