@@ -189,11 +189,15 @@ pub fn load_file_per_line(file_path: &str) -> Vec<String> {
     lines
 }
 
+fn pad_length(data_len: usize, block_size: usize) -> usize {
+    (block_size - (data_len % block_size)) % block_size
+}
+
 pub fn pkcs_7_padding(buf: &Vec<u8>, block_size: usize) -> Vec<u8> {
-    let output_size = ((buf.len() / block_size) + 1) * block_size;
-    let pad: u8 = (output_size - buf.len()) as u8;
+    let output_size = buf.len() + pad_length(buf.len(), block_size);
+    let pad_char: u8 = (output_size - buf.len()) as u8;
     let mut output = buf.clone();
-    output.resize(output_size, pad);
+    output.resize(output_size, pad_char);
 
     output
 }
@@ -302,9 +306,25 @@ mod tests {
     }
 
     #[test]
+    fn test_pad_length() {
+        assert_eq!(0, pad_length(16, 16));
+        assert_eq!(1, pad_length(15, 16));
+        assert_eq!(15, pad_length(17, 16));
+        assert_eq!(12, pad_length(20, 16));
+        assert_eq!(0, pad_length(32, 16));
+        assert_eq!(0, pad_length(32, 16));
+        assert_eq!(0, pad_length(32, 1));
+    }
+
+    #[test]
     fn test_pkcs_7_pad_20() {
         let input = b"YELLOW SUBMARINE".to_vec();
         assert_eq!(b"YELLOW SUBMARINE\x04\x04\x04\x04".to_vec(), pkcs_7_padding(&input, 20))
     }
 
+    #[test]
+    fn test_pkcs_7_pad_16() {
+        let input = b"YELLOW SUBMARINE".to_vec();
+        assert_eq!(b"YELLOW SUBMARINE".to_vec(), pkcs_7_padding(&input, 16))
+    }
 }
