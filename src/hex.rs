@@ -23,7 +23,7 @@ pub fn main() {
                 println!("Decoded: {:?}", &bytes);
                 let encoded = encode_b64(&bytes);
                 println!("Encoded b64: {:?}", encoded);
-            },
+            }
             None => {
                 println!("Invalid hex string");
             }

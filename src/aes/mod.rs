@@ -5,14 +5,13 @@ use utils::pkcs_7_padding;
 
 pub fn decrypt_128_ecb(key: &Vec<u8>, data: &Vec<u8>, pad: bool) -> Vec<u8> {
     assert!(key.len() == 16);
-    assert!(pad == true || data.len() % 16 == 0, "Data must be multiple of 16 bytes");
+    assert!(
+        pad == true || data.len() % 16 == 0,
+        "Data must be multiple of 16 bytes"
+    );
 
-    let mut c = symm::Crypter::new(
-                symm::Cipher::aes_128_ecb(),
-                symm::Mode::Decrypt,
-                &key,
-                None,
-            ).unwrap();
+    let mut c = symm::Crypter::new(symm::Cipher::aes_128_ecb(), symm::Mode::Decrypt, &key, None)
+        .unwrap();
     c.pad(pad);
 
     let mut plaintext = vec![0; 16 + symm::Cipher::aes_128_ecb().block_size()];
@@ -27,13 +26,12 @@ pub fn decrypt_128_ecb(key: &Vec<u8>, data: &Vec<u8>, pad: bool) -> Vec<u8> {
 
 pub fn encrypt_128_ecb(key: &Vec<u8>, data: &Vec<u8>, pad: bool) -> Vec<u8> {
     assert!(key.len() == 16, "Key must have length 16 bytes");
-    assert!(pad == true || data.len() % 16 == 0, "Data must be multiple of 16 bytes");
-    let mut c = symm::Crypter::new(
-                symm::Cipher::aes_128_ecb(),
-                symm::Mode::Encrypt,
-                &key,
-                None,
-            ).unwrap();
+    assert!(
+        pad == true || data.len() % 16 == 0,
+        "Data must be multiple of 16 bytes"
+    );
+    let mut c = symm::Crypter::new(symm::Cipher::aes_128_ecb(), symm::Mode::Encrypt, &key, None)
+        .unwrap();
     c.pad(pad);
 
     let mut ciphertext = vec![0; data.len() + symm::Cipher::aes_128_ecb().block_size()];
@@ -47,7 +45,10 @@ pub fn encrypt_128_ecb(key: &Vec<u8>, data: &Vec<u8>, pad: bool) -> Vec<u8> {
 pub fn encrypt_128_cbc(key: &Vec<u8>, data: &Vec<u8>, iv: &Vec<u8>, pad: bool) -> Vec<u8> {
     assert!(iv.len() == 16, "IV must have length 16 bytes");
     assert!(key.len() == 16, "Key must have length 16 bytes");
-    assert!(pad == true || data.len() % 16 == 0, "Data must be multiple of 16 bytes or padding must be enabled");
+    assert!(
+        pad == true || data.len() % 16 == 0,
+        "Data must be multiple of 16 bytes or padding must be enabled"
+    );
 
     let mut prev = iv.clone();
 
@@ -56,14 +57,13 @@ pub fn encrypt_128_cbc(key: &Vec<u8>, data: &Vec<u8>, iv: &Vec<u8>, pad: bool) -
     let mut plaintext: Vec<u8>;
     if pad {
         plaintext = pkcs_7_padding(&data, 16);
-    }
-    else {
+    } else {
         plaintext = data.clone();
     }
 
     assert!(plaintext.len() % 16 == 0);
 
-    for chunk in plaintext.chunks(16)  {
+    for chunk in plaintext.chunks(16) {
         assert!(chunk.len() == 16);
         assert!(prev.len() == 16);
         let mixed = xor(&chunk.to_vec(), &prev);
@@ -88,7 +88,7 @@ pub fn decrypt_128_cbc(key: &Vec<u8>, data: &Vec<u8>, iv: &Vec<u8>) -> Vec<u8> {
 
     let mut output = Vec::new();
 
-    for chunk in data.chunks(16)  {
+    for chunk in data.chunks(16) {
         let decrypted = decrypt_128_ecb(&key, &chunk.to_vec(), false);
         let mixed = xor(&decrypted, &prev);
 
@@ -106,11 +106,8 @@ mod tests {
 
     #[test]
     fn test_encrypt_decrypt_ecb() {
-        let key: Vec<u8> = vec![1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6];
-        let input: Vec<u8> =  vec![
-            255, 0, 128, 0, 64, 0, 32, 0,
-            255, 1, 128, 2, 64, 3, 32, 4,
-        ];
+        let key: Vec<u8> = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6];
+        let input: Vec<u8> = vec![255, 0, 128, 0, 64, 0, 32, 0, 255, 1, 128, 2, 64, 3, 32, 4];
         assert_eq!(input.len(), 16);
         let encrypted = encrypt_128_ecb(&key, &input, false);
 
@@ -122,12 +119,40 @@ mod tests {
 
     #[test]
     fn test_encrypt_decrypt_cbc() {
-        let key: Vec<u8> = vec![1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6];
+        let key: Vec<u8> = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6];
         let input: Vec<u8> = vec![
-            255, 0, 128, 0, 64, 0, 32, 0,
-            255, 1, 128, 2, 64, 3, 32, 4,
-            255, 254, 253, 252, 251, 250, 249, 248,
-            1, 2, 3, 4, 5, 6, 7, 8
+            255,
+            0,
+            128,
+            0,
+            64,
+            0,
+            32,
+            0,
+            255,
+            1,
+            128,
+            2,
+            64,
+            3,
+            32,
+            4,
+            255,
+            254,
+            253,
+            252,
+            251,
+            250,
+            249,
+            248,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
         ];
         let iv: Vec<u8> = vec![0; 16];
 

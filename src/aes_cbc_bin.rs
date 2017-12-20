@@ -37,4 +37,3 @@ pub fn main() {
 
     println!("Plaintext:\n{}", String::from_utf8(plaintext).unwrap());
 }
-

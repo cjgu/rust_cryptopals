@@ -35,4 +35,3 @@ pub fn main() {
     println!("Guessed method: {:?}", guessed_method);
 
 }
-

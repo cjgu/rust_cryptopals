@@ -32,7 +32,9 @@ pub fn main() {
     let mut plaintext_str = String::new();
     let f = File::open(&args[1]).expect("Unable to open file");
     let mut br = BufReader::new(f);
-    br.read_to_string(&mut plaintext_str).expect("Can not read string");
+    br.read_to_string(&mut plaintext_str).expect(
+        "Can not read string",
+    );
 
     let plaintext_bytes = plaintext_str.into_bytes();
 

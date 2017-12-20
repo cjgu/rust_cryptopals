@@ -4,7 +4,10 @@ use itertools::Itertools;
 pub fn xor(a: &Vec<u8>, b: &Vec<u8>) -> Vec<u8> {
     assert_eq!(a.len(), b.len());
 
-    a.iter().zip(b.iter()).map(|(&x,&y)| x ^ y).collect::<Vec<u8>>()
+    a.iter()
+        .zip(b.iter())
+        .map(|(&x, &y)| x ^ y)
+        .collect::<Vec<u8>>()
 }
 
 pub fn repeating_key(key: &Vec<u8>, length: usize) -> Vec<u8> {
@@ -18,9 +21,12 @@ pub fn repeating_key(key: &Vec<u8>, length: usize) -> Vec<u8> {
 pub fn break_repeating_key(key_size: usize, cryptotext: &Vec<u8>) -> Vec<u8> {
     let mut full_key = Vec::with_capacity(key_size);
     for i in 0..key_size {
-        let (key, score) = search_single_char_key(
-            &cryptotext.iter().dropping(i).step(key_size).map(|&x| x).collect_vec()
-        );
+        let (key, score) = search_single_char_key(&cryptotext
+            .iter()
+            .dropping(i)
+            .step(key_size)
+            .map(|&x| x)
+            .collect_vec());
         full_key.push(key);
     }
 
@@ -53,17 +59,18 @@ pub fn search_single_char_key(ciphertext: &Vec<u8>) -> (u8, u32) {
 }
 
 pub fn score_plaintext(plaintext: &Vec<u8>) -> u32 {
-    plaintext.iter()
-        .map(| &x | match x {
+    plaintext
+        .iter()
+        .map(|&x| match x {
             10 => 1, // '\n'
             32 => 1, // ' '
             39 => 1, // '\''
             45 => 1, // -
-            48 ... 57 => 1, // 0-9
+            48...57 => 1, // 0-9
             58 => 1, // :
-            65 ... 90 => 1, // A-Z
-            97 ... 122 => 1, // a-z
-            _ => 0
+            65...90 => 1, // A-Z
+            97...122 => 1, // a-z
+            _ => 0,
         })
         .fold(0, |acc, x| acc + x)
 }
@@ -71,7 +78,7 @@ pub fn score_plaintext(plaintext: &Vec<u8>) -> u32 {
 pub fn hamming_distance(a: &Vec<u8>, b: &Vec<u8>) -> u32 {
     let c = xor(a, b);
 
-    c.iter().map(|&x| x.count_ones()).fold(0, | acc, x| acc + x)
+    c.iter().map(|&x| x.count_ones()).fold(0, |acc, x| acc + x)
 }
 
 #[cfg(test)]

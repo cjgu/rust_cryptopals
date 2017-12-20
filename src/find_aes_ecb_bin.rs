@@ -16,11 +16,10 @@ fn count_duplicates(bytes: &[u8], block_size: usize) -> u32 {
     let mut duplicates = 0;
     let mut chunks_seen = HashSet::new();
 
-    for chunk in bytes.chunks(block_size)  {
+    for chunk in bytes.chunks(block_size) {
         if !chunks_seen.contains(chunk) {
             chunks_seen.insert(chunk);
-        }
-        else {
+        } else {
             duplicates += 1;
         }
     }
@@ -42,11 +41,16 @@ pub fn main() {
 
     let lines = load_file_per_line(&args[1]);
 
-    let duplicate_counts = lines.iter()
+    let duplicate_counts = lines
+        .iter()
         .map(|line| decode_hex(&line.clone()).unwrap())
         .map(|line| count_duplicates(&line, 16));
 
-    let max_line = duplicate_counts.enumerate().map(|(x,y)| (y, x)).max().unwrap();
+    let max_line = duplicate_counts
+        .enumerate()
+        .map(|(x, y)| (y, x))
+        .max()
+        .unwrap();
 
     println!("{:?}", max_line);
 

@@ -9,7 +9,7 @@ pub fn decode_hex(hex_str: &str) -> Option<Vec<u8>> {
 
     assert_eq!(len % 2, 0);
 
-    let mut v: Vec<u8> = Vec::with_capacity(len/2);
+    let mut v: Vec<u8> = Vec::with_capacity(len / 2);
 
     let mut prev: u8 = 0;
     for (i, c) in hex_str.chars().enumerate() {
@@ -17,14 +17,11 @@ pub fn decode_hex(hex_str: &str) -> Option<Vec<u8>> {
             Some(x) => {
                 if i % 2 == 0 {
                     prev = x as u8;
-                }
-                else {
+                } else {
                     v.push((prev << 4) | x as u8);
                 }
-            },
-            None => {
-                return None
             }
+            None => return None,
         }
     }
 
@@ -32,10 +29,22 @@ pub fn decode_hex(hex_str: &str) -> Option<Vec<u8>> {
 }
 
 const HEX_MAP: [char; 16] = [
-    '0', '1', '2', '3',
-    '4', '5', '6', '7',
-    '8', '9', 'a', 'b',
-    'c', 'd', 'e', 'f',
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
 ];
 
 pub fn encode_hex(bytes: &Vec<u8>) -> String {
@@ -50,19 +59,70 @@ pub fn encode_hex(bytes: &Vec<u8>) -> String {
 }
 
 const B64_MAP: [char; 64] = [
-  'A', 'B', 'C', 'D', 'E',
-  'F', 'G', 'H', 'I', 'J',
-  'K', 'L', 'M', 'N', 'O',
-  'P', 'Q', 'R', 'S', 'T',
-  'U', 'V', 'W', 'X', 'Y',
-  'Z', 'a', 'b', 'c', 'd',
-  'e', 'f', 'g', 'h', 'i',
-  'j', 'k', 'l', 'm', 'n',
-  'o', 'p', 'q', 'r', 's',
-  't', 'u', 'v', 'w', 'x',
-  'y', 'z', '0', '1', '2',
-  '3', '4', '5', '6', '7',
-  '8', '9', '+', '/'
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z',
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    'g',
+    'h',
+    'i',
+    'j',
+    'k',
+    'l',
+    'm',
+    'n',
+    'o',
+    'p',
+    'q',
+    'r',
+    's',
+    't',
+    'u',
+    'v',
+    'w',
+    'x',
+    'y',
+    'z',
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '+',
+    '/',
 ];
 
 
@@ -87,9 +147,10 @@ pub fn encode_b64(bytes: &Vec<u8>) -> String {
         let mut write = |val| *s_out.next().unwrap() = val;
 
         while let (Some(first), Some(second), Some(third)) =
-            (s_in.next(), s_in.next(), s_in.next()) {
+            (s_in.next(), s_in.next(), s_in.next())
+        {
 
-            let n = first << 16 | second << 8 | third;  // 24 bits
+            let n = first << 16 | second << 8 | third; // 24 bits
 
             write(B64_MAP[((n >> 18) & 0x3F) as usize] as u8);
             write(B64_MAP[((n >> 12) & 0x3F) as usize] as u8);
@@ -98,19 +159,18 @@ pub fn encode_b64(bytes: &Vec<u8>) -> String {
         }
 
         match mod_len {
-            0 => {},
+            0 => {}
             1 => {
-                let n =  (bytes[in_len - 1] as u32) << 16;
+                let n = (bytes[in_len - 1] as u32) << 16;
                 write(B64_MAP[((n >> 18) & 0x3F) as usize] as u8);
                 write(B64_MAP[((n >> 12) & 0x3F) as usize] as u8);
-            },
+            }
             2 => {
-                let n = (bytes[in_len - 2] as u32) << 16 |
-                        (bytes[in_len - 1] as u32) << 8;
+                let n = (bytes[in_len - 2] as u32) << 16 | (bytes[in_len - 1] as u32) << 8;
                 write(B64_MAP[((n >> 18) & 0x3F) as usize] as u8);
                 write(B64_MAP[((n >> 12) & 0x3F) as usize] as u8);
                 write(B64_MAP[((n >> 6) & 0x3F) as usize] as u8);
-            },
+            }
             _ => {}
         }
     }
@@ -121,13 +181,13 @@ pub fn encode_b64(bytes: &Vec<u8>) -> String {
 fn b64_char_to_u8(c: char) -> u8 {
     let d = c as u8;
     match d {
-        65 ... 90 => d - ('A' as u8), // A-Z
-        97 ... 122 => d - ('a' as u8) + 26, // a-z
-        48 ... 57 => d - ('0' as u8) + 2*26, // 0-9
+        65...90 => d - ('A' as u8), // A-Z
+        97...122 => d - ('a' as u8) + 26, // a-z
+        48...57 => d - ('0' as u8) + 2 * 26, // 0-9
         43 => 62,  // +
         47 => 63,  // /
         61 => 0xFF,  // =
-        _ => panic!("Invalid b64 char")
+        _ => panic!("Invalid b64 char"),
     }
 }
 
@@ -142,7 +202,8 @@ pub fn decode_b64(b64_str: &str) -> Vec<u8> {
         let mut s_in = b64_str.chars();
 
         while let (Some(first), Some(second), Some(third), Some(fourth)) =
-            (s_in.next(), s_in.next(), s_in.next(), s_in.next()) {
+            (s_in.next(), s_in.next(), s_in.next(), s_in.next())
+        {
 
             // 4 bytes - > 3 bytes
             let c1 = b64_char_to_u8(first);
@@ -208,11 +269,10 @@ pub fn count_duplicate_blocks(bytes: &[u8], block_size: usize) -> (u32, u32) {
     let mut chunks = 0;
     let mut chunks_seen = HashSet::new();
 
-    for chunk in bytes.chunks(block_size)  {
+    for chunk in bytes.chunks(block_size) {
         if !chunks_seen.contains(chunk) {
             chunks_seen.insert(chunk);
-        }
-        else {
+        } else {
             duplicates += 1;
         }
         chunks += 1;
@@ -241,13 +301,13 @@ mod tests {
     #[test]
     fn test_decode_hex_2() {
         let res: Vec<u8> = vec![0];
-        assert_eq!(Some(res),decode_hex("00"));
+        assert_eq!(Some(res), decode_hex("00"));
     }
 
     #[test]
     fn test_decode_hex_3() {
         let res: Vec<u8> = vec![0, 255];
-        assert_eq!(Some(res),decode_hex("00FF"));
+        assert_eq!(Some(res), decode_hex("00FF"));
     }
 
     #[test]
@@ -278,8 +338,10 @@ mod tests {
     fn test_decode_hex_encode_b64() {
         // This is the test case from the web page
         let input: Vec<u8> = decode_hex("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d").unwrap();
-        assert_eq!("SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t", 
-                   encode_b64(&input));
+        assert_eq!(
+            "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t",
+            encode_b64(&input)
+        );
     }
 
     #[test]
@@ -320,7 +382,12 @@ mod tests {
     fn test_decode_b64_4() {
         // This is the test case from the web page
         let output: Vec<u8> = decode_hex("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d").unwrap();
-        assert_eq!(output, decode_b64("SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"));
+        assert_eq!(
+            output,
+            decode_b64(
+                "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t",
+            )
+        );
     }
 
     #[test]
@@ -337,7 +404,10 @@ mod tests {
     #[test]
     fn test_pkcs_7_pad_20() {
         let input = b"YELLOW SUBMARINE".to_vec();
-        assert_eq!(b"YELLOW SUBMARINE\x04\x04\x04\x04".to_vec(), pkcs_7_padding(&input, 20))
+        assert_eq!(
+            b"YELLOW SUBMARINE\x04\x04\x04\x04".to_vec(),
+            pkcs_7_padding(&input, 20)
+        )
     }
 
     #[test]

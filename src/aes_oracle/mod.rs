@@ -25,13 +25,11 @@ pub fn encrypt_randomly(data: &Vec<u8>) -> Vec<u8> {
     let key = random::random_key(16);
     assert!(key.len() == 16);
 
-    let cipher_mode =
-        if random::random_bool() {
-            CipherMode::ECB
-        }
-        else {
-            CipherMode::CBC
-        };
+    let cipher_mode = if random::random_bool() {
+        CipherMode::ECB
+    } else {
+        CipherMode::CBC
+    };
 
     let mut prefix = random::random_prefix(5, 10);
     let mut postfix = random::random_prefix(5, 10);

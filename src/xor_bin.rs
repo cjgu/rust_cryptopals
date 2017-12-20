@@ -27,7 +27,7 @@ pub fn main() {
                 let res = xor(&a_bytes, &b_bytes);
                 let encoded = encode_hex(&res);
                 println!("{:?}", encoded);
-            },
+            }
             _ => {
                 println!("Invalid hex string");
             }
