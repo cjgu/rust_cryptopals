@@ -1,5 +1,5 @@
-extern crate openssl;
 extern crate itertools;
+extern crate openssl;
 extern crate rand;
 
 mod utils;
@@ -12,7 +12,7 @@ use std::env;
 use std::process;
 
 use utils::encode_hex;
-use aes_oracle::{encrypt_randomly, detection_oracle};
+use aes_oracle::{detection_oracle_random_method, encrypt_random_method};
 
 fn usage() {
     println!("Usage: oracle <data>");
@@ -28,10 +28,9 @@ pub fn main() {
     }
     let data = args[1].clone().into_bytes();
 
-    let encrypted = encrypt_randomly(&data);
+    let encrypted = encrypt_random_method(&data);
 
     println!("Encrypted: {}", encode_hex(&encrypted));
-    let guessed_method = detection_oracle(&encrypted);
+    let guessed_method = detection_oracle_random_method(&encrypted);
     println!("Guessed method: {:?}", guessed_method);
-
 }

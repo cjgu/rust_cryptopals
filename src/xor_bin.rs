@@ -31,7 +31,6 @@ pub fn main() {
             _ => {
                 println!("Invalid hex string");
             }
-
         }
     }
 }

@@ -27,7 +27,6 @@ pub fn main() {
             None => {
                 println!("Invalid hex string");
             }
-
         }
     }
 }

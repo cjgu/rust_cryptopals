@@ -1,5 +1,5 @@
-extern crate openssl;
 extern crate itertools;
+extern crate openssl;
 
 mod utils;
 mod aes;

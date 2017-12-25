@@ -31,7 +31,6 @@ fn count_duplicates(bytes: &[u8], block_size: usize) -> u32 {
 }
 
 pub fn main() {
-
     let args: Vec<String> = env::args().collect();
 
     if args.len() != 2 {
@@ -53,7 +52,6 @@ pub fn main() {
         .unwrap();
 
     println!("{:?}", max_line);
-
 
     println!("ECB line: {:?}", lines[max_line.1]);
 }

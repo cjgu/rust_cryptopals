@@ -10,8 +10,8 @@ pub fn decrypt_128_ecb(key: &Vec<u8>, data: &Vec<u8>, pad: bool) -> Vec<u8> {
         "Data must be multiple of 16 bytes"
     );
 
-    let mut c = symm::Crypter::new(symm::Cipher::aes_128_ecb(), symm::Mode::Decrypt, &key, None)
-        .unwrap();
+    let mut c =
+        symm::Crypter::new(symm::Cipher::aes_128_ecb(), symm::Mode::Decrypt, &key, None).unwrap();
     c.pad(pad);
 
     let mut plaintext = vec![0; 16 + symm::Cipher::aes_128_ecb().block_size()];
@@ -30,8 +30,8 @@ pub fn encrypt_128_ecb(key: &Vec<u8>, data: &Vec<u8>, pad: bool) -> Vec<u8> {
         pad == true || data.len() % 16 == 0,
         "Data must be multiple of 16 bytes"
     );
-    let mut c = symm::Crypter::new(symm::Cipher::aes_128_ecb(), symm::Mode::Encrypt, &key, None)
-        .unwrap();
+    let mut c =
+        symm::Crypter::new(symm::Cipher::aes_128_ecb(), symm::Mode::Encrypt, &key, None).unwrap();
     c.pad(pad);
 
     let mut ciphertext = vec![0; data.len() + symm::Cipher::aes_128_ecb().block_size()];
@@ -121,38 +121,8 @@ mod tests {
     fn test_encrypt_decrypt_cbc() {
         let key: Vec<u8> = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6];
         let input: Vec<u8> = vec![
-            255,
-            0,
-            128,
-            0,
-            64,
-            0,
-            32,
-            0,
-            255,
-            1,
-            128,
-            2,
-            64,
-            3,
-            32,
-            4,
-            255,
-            254,
-            253,
-            252,
-            251,
-            250,
-            249,
-            248,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
+            255, 0, 128, 0, 64, 0, 32, 0, 255, 1, 128, 2, 64, 3, 32, 4, 255, 254, 253, 252, 251,
+            250, 249, 248, 1, 2, 3, 4, 5, 6, 7, 8,
         ];
         let iv: Vec<u8> = vec![0; 16];
 

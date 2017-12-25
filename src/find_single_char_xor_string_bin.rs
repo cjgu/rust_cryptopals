@@ -14,7 +14,6 @@ use xor::search_single_char_key;
 use xor::repeating_key;
 use xor::xor;
 
-
 fn usage() {
     println!("Usage: find_single_single_char_xor_string <file>");
     std::process::exit(-1);
