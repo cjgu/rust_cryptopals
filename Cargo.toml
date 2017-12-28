@@ -47,6 +47,15 @@ path = "src/oracle_bin.rs"
 name = "ecb_byte_at_a_time"
 path = "src/ecb_byte_at_a_time_bin.rs"
 
+[[bin]]
+name = "ecb_cut_n_paste"
+path = "src/ecb_cut_n_paste_bin.rs"
+
+[[bin]]
+name = "gen_key"
+path = "src/gen_key_bin.rs"
+
+
 [dependencies]
 itertools="0.5.8"
 openssl = "0.9.19"

@@ -3,6 +3,7 @@ use std::io::BufReader;
 use std::io::Read;
 use std::io::BufRead;
 use std::collections::HashSet;
+use std::iter;
 
 pub fn decode_hex(hex_str: &str) -> Option<Vec<u8>> {
     let len = hex_str.len();
