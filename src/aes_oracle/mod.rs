@@ -56,6 +56,8 @@ pub fn detection_oracle_ecb_extra() {
         println!("Detected non-ECB, bailing");
         return;
     }
+
+
     let mut decrypted: Vec<u8> = Vec::with_capacity(block_size);
 
     let minimal = vec![0; 0];
@@ -64,7 +66,7 @@ pub fn detection_oracle_ecb_extra() {
 
     let mut prev_decrypted_block: Vec<u8> = vec![65; block_size];
 
-    for block_no in 0..num_blocks + 1 {
+    for block_no in 0..num_blocks {
         let mut decrypted_block: Vec<u8> = Vec::with_capacity(block_size);
 
         for block_pos in 1..block_size + 1 {
@@ -79,11 +81,11 @@ pub fn detection_oracle_ecb_extra() {
                 data[block_size - decrypted_block.len() + i - 1] = decrypted_block[i];
             }
 
-            for last_byte in 0..0xFF {
-                data[block_size - 1] = last_byte;
+            for last_byte in 0..256 {
+                data[block_size - 1] = last_byte as u8;
                 let ciphertext = encrypt_ecb_extra(&data, &key);
 
-                dict.insert(ciphertext[0..block_size].to_vec(), last_byte);
+                dict.insert(ciphertext[0..block_size].to_vec(), last_byte as u8);
             }
 
             let short = vec![65; block_size - block_pos];
@@ -92,7 +94,7 @@ pub fn detection_oracle_ecb_extra() {
             let block_start_pos = block_no * block_size;
             let block_end_pos = (block_no + 1) * block_size;
 
-            if (block_end_pos > ciphertext.len()) {
+            if block_end_pos >= ciphertext.len() {
                 // We're now extracted all bytes
                 break;
             }
