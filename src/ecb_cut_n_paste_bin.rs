@@ -20,6 +20,12 @@ fn usage() {
 pub fn main() {
     let args: Vec<String> = env::args().collect();
 
+    if args.len() < 2 {
+        println!("Invalid argument");
+        usage();
+        process::exit(-1);
+    }
+
     if args[1] == "encrypt" {
         let key = utils::decode_hex(&args[3]).expect("Invalid hex key");
 
