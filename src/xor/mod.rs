@@ -1,4 +1,3 @@
-use std::char;
 use itertools::Itertools;
 
 pub fn xor(a: &Vec<u8>, b: &Vec<u8>) -> Vec<u8> {
@@ -21,7 +20,7 @@ pub fn repeating_key(key: &Vec<u8>, length: usize) -> Vec<u8> {
 pub fn break_repeating_key(key_size: usize, cryptotext: &Vec<u8>) -> Vec<u8> {
     let mut full_key = Vec::with_capacity(key_size);
     for i in 0..key_size {
-        let (key, score) = search_single_char_key(&cryptotext
+        let (key, _) = search_single_char_key(&cryptotext
             .iter()
             .dropping(i)
             .step(key_size)

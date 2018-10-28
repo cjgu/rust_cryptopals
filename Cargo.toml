@@ -1,7 +1,11 @@
 [package]
-name = "challenge"
+name = "crypto_pals"
 version = "0.1.0"
 authors = ["Carl Johan Gustavsson <cjg@prng.se>"]
+
+[lib]
+name = "challenge"
+path = "src/lib.rs"
 
 [[bin]]
 name = "hex"

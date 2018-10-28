@@ -1,7 +1,7 @@
-extern crate rand;
+extern crate challenge;
 
-mod random;
-mod utils;
+use challenge::random;
+use challenge::utils;
 
 
 pub fn main() {

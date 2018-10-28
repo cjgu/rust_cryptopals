@@ -1,18 +1,10 @@
-extern crate itertools;
-extern crate openssl;
-extern crate rand;
-
-mod utils;
-mod aes;
-mod xor;
-mod random;
-mod aes_oracle;
+extern crate challenge;
 
 use std::env;
 use std::process;
 
-use utils::encode_hex;
-use aes_oracle::{detection_oracle_random_method, encrypt_random_method};
+use challenge::utils::encode_hex;
+use challenge::aes_oracle::{detection_oracle_random_method, encrypt_random_method};
 
 fn usage() {
     println!("Usage: oracle <data>");

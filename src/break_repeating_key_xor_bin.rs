@@ -1,20 +1,12 @@
 extern crate itertools;
 
-mod utils;
-mod xor;
+extern crate challenge;
 
 use std::env;
-use std::char;
 use std::process;
 
-use utils::decode_hex;
-use utils::encode_hex;
-use utils::decode_b64;
-use utils::load_file;
-use xor::break_repeating_key;
-use xor::hamming_distance;
-use xor::repeating_key;
-use xor::xor;
+use challenge::utils::{decode_b64, load_file};
+use challenge::xor::{break_repeating_key, hamming_distance, repeating_key, xor};
 
 fn usage() {
     println!("Usage: break_repeating_key_xor <ciphertext-file>");
@@ -66,7 +58,7 @@ pub fn main() {
         process::exit(1);
     }
 
-    let mut ciphertext_b64 = load_file(&args[1]);
+    let ciphertext_b64 = load_file(&args[1]);
 
     let ciphertext_bytes = decode_b64(&ciphertext_b64);
     println!("Input bytes: {:?}", ciphertext_bytes.len());

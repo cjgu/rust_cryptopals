@@ -1,13 +1,10 @@
-extern crate itertools;
-extern crate openssl;
-
-mod xor;
-mod aes;
-mod cookie;
-mod utils;
+extern crate challenge;
 
 use std::env;
 use std::process;
+
+use challenge::{utils, cookie};
+
 
 fn usage() {
     println!("Usage:

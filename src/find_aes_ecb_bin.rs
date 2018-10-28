@@ -1,11 +1,10 @@
-mod utils;
+extern crate challenge;
 
 use std::env;
 use std::process;
 use std::collections::HashSet;
 
-use utils::decode_hex;
-use utils::load_file_per_line;
+use challenge::utils::{decode_hex, load_file_per_line};
 
 fn usage() {
     println!("Usage: aes_ecb <base64 encoded aes128 ecb ciphertext>> <key>");

@@ -14,7 +14,7 @@ version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
-name = "challenge"
+name = "crypto_pals"
 version = "0.1.0"
 dependencies = [
  "itertools 0.5.10 (registry+https://github.com/rust-lang/crates.io-index)",

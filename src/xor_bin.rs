@@ -1,12 +1,9 @@
-extern crate itertools;
-mod utils;
-mod xor;
+extern crate challenge;
 
 use std::env;
 
-use utils::decode_hex;
-use utils::encode_hex;
-use xor::xor;
+use challenge::utils::{decode_hex, encode_hex};
+use challenge::xor::xor;
 
 fn usage() {
     println!("Usage: xor_bin <hex-encoded-string> <hex-encoded-string>");

@@ -1,17 +1,10 @@
-extern crate itertools;
-extern crate openssl;
-
-mod utils;
-mod aes;
-mod xor;
+extern crate challenge;
 
 use std::env;
 use std::process;
 
-use aes::decrypt_128_cbc;
-
-use utils::decode_b64;
-use utils::load_file;
+use challenge::aes::decrypt_128_cbc;
+use challenge::utils::{decode_b64, load_file};
 
 fn usage() {
     println!("Usage: aes_cbc <file> <key>");

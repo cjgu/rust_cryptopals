@@ -1,6 +1,4 @@
-extern crate itertools;
-mod utils;
-mod xor;
+extern crate challenge;
 
 use std::char;
 use std::env;
@@ -9,10 +7,8 @@ use std::fs::File;
 use std::io::BufReader;
 use std::io::BufRead;
 
-use utils::decode_hex;
-use xor::search_single_char_key;
-use xor::repeating_key;
-use xor::xor;
+use challenge::utils::decode_hex;
+use challenge::xor::{search_single_char_key, repeating_key, xor};
 
 fn usage() {
     println!("Usage: find_single_single_char_xor_string <file>");

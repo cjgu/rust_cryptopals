@@ -1,9 +1,7 @@
 use std::fs::File;
 use std::io::BufReader;
-use std::io::Read;
 use std::io::BufRead;
 use std::collections::HashSet;
-use std::iter;
 
 pub fn decode_hex(hex_str: &str) -> Option<Vec<u8>> {
     let len = hex_str.len();
@@ -120,7 +118,6 @@ pub fn decode_b64(b64_str: &str) -> Vec<u8> {
     let out_len = 3 * b64_str.len() / 4;
     let mut out: Vec<u8> = Vec::with_capacity(out_len);
 
-    let mut byte_count = 0;
     {
         let mut s_in = b64_str.chars();
 
@@ -134,15 +131,12 @@ pub fn decode_b64(b64_str: &str) -> Vec<u8> {
             let c4 = b64_char_to_u8(fourth);
 
             out.push(c1 << 2 | (c2 & 0x30) >> 4);
-            byte_count += 1;
 
             if c3 != 0xFF {
                 out.push(((c2 & 0x0F) << 4) | ((c3 >> 2) & 0xF));
-                byte_count += 1;
 
                 if c4 != 0xFF {
                     out.push(((c3 & 0x03) << 6) | (0x3F & c4));
-                    byte_count += 1;
                 }
             }
         }
@@ -154,7 +148,7 @@ pub fn decode_b64(b64_str: &str) -> Vec<u8> {
 pub fn load_file(file_path: &str) -> String {
     let mut content = String::new();
     let f = File::open(file_path).expect("Unable to open file");
-    let mut br = BufReader::new(f);
+    let br = BufReader::new(f);
     for line in br.lines() {
         let l = line.unwrap();
         content.push_str(&l);
@@ -165,7 +159,7 @@ pub fn load_file(file_path: &str) -> String {
 pub fn load_file_per_line(file_path: &str) -> Vec<String> {
     let mut lines = Vec::new();
     let f = File::open(file_path).expect("Unable to open file");
-    let mut br = BufReader::new(f);
+    let br = BufReader::new(f);
     for line in br.lines() {
         let l = line.unwrap();
         lines.push(l);

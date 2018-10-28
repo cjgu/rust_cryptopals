@@ -1,16 +1,13 @@
-extern crate itertools;
-mod utils;
-mod xor;
+extern crate challenge;
 
 use std::env;
 use std::char;
 use std::process;
 
-use utils::decode_hex;
-use utils::encode_hex;
-use xor::search_single_char_key;
-use xor::repeating_key;
-use xor::xor;
+use challenge::utils::decode_hex;
+use challenge::xor::search_single_char_key;
+use challenge::xor::repeating_key;
+use challenge::xor::xor;
 
 fn usage() {
     println!("Usage: xor_search_single_char_bin <hex-encoded-string>");

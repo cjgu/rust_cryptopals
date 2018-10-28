@@ -1,20 +1,13 @@
-extern crate itertools;
-
-mod utils;
-mod xor;
+extern crate challenge;
 
 use std::env;
-use std::char;
 use std::process;
 use std::fs::File;
 use std::io::BufReader;
 use std::io::Read;
 
-use utils::decode_hex;
-use utils::encode_hex;
-use xor::search_single_char_key;
-use xor::repeating_key;
-use xor::xor;
+use challenge::utils::encode_hex;
+use challenge::xor::{repeating_key, xor};
 
 fn usage() {
     println!("Usage: encrypt_xor_bin <plain text file> <key>");
