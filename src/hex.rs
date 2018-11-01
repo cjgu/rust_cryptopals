@@ -1,9 +1,8 @@
-mod utils;
+extern crate challenge;
 
 use std::env;
 
-use utils::decode_hex;
-use utils::encode_b64;
+use challenge::utils::{decode_hex, encode_b64};
 
 fn usage() {
     println!("Usage: hex <hex-encoded-string>");
