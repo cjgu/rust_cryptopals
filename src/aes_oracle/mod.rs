@@ -115,6 +115,7 @@ pub fn detection_oracle_ecb_extra() {
 
 pub fn detection_oracle_ecb_extra_and_random() {
     let key = random::random_key(16);
+
     // Detect block size
     // - Encrypt A, AA, AAA until ciphertext length changes
     //   block size is the difference in size.
@@ -135,16 +136,21 @@ pub fn detection_oracle_ecb_extra_and_random() {
     println!("Detected block_size={:?}", block_size);
 
     // Detect ECB
-    // - 2x block size of A should encrypt to two equal blocks
-    let data = vec![65; block_size * 2];
+    // - A few block size times A should encrypt to a few equal blocks
+    let data = vec![65; block_size * 4];
     let ciphertext = encrypt_ecb_extra_and_random(&data, &key);
 
-    if ciphertext[0..block_size] == ciphertext[block_size..block_size * 2] {
-        println!("Detected ECB");
+    let (duplicates, _) = utils::count_duplicate_blocks(&ciphertext, block_size);
+
+    if duplicates > 1 {
+        println!("Detected ECB, {:?} duplicates", duplicates);
     } else {
         println!("Detected non-ECB, bailing");
         return;
     }
+
+    println!("Start extracting one byte at a time");
+
     let mut decrypted: Vec<u8> = Vec::with_capacity(block_size);
 
     let minimal = vec![0; 0];
@@ -154,8 +160,10 @@ pub fn detection_oracle_ecb_extra_and_random() {
     let mut prev_decrypted_block: Vec<u8> = vec![65; block_size];
 
     for block_no in 0..num_blocks {
-        let mut decrypted_block: Vec<u8> = Vec::with_capacity(block_size);
+        println!("Working on block no {:?}", block_no);
 
+        let mut decrypted_block: Vec<u8> = Vec::with_capacity(block_size);
+        
         for block_pos in 1..block_size + 1 {
             let mut dict = HashMap::new();
 
@@ -191,7 +199,8 @@ pub fn detection_oracle_ecb_extra_and_random() {
             if let Some(&next_byte) = found_block {
                 decrypted_block.push(next_byte);
             } else {
-                panic!("Block not found, bug...");
+                // panic!("Block not found, bug...");
+                continue;
             }
         }
         prev_decrypted_block = decrypted_block.clone();
