@@ -1,5 +1,3 @@
-extern crate challenge;
-
 use std::env;
 use std::process;
 

@@ -1,10 +1,8 @@
-extern crate challenge;
-
 use std::env;
-use std::process;
 use std::fs::File;
 use std::io::BufReader;
 use std::io::Read;
+use std::process;
 
 use challenge::utils::encode_hex;
 use challenge::xor::{repeating_key, xor};

@@ -1,14 +1,12 @@
-extern crate challenge;
-
 use std::char;
 use std::env;
-use std::process;
 use std::fs::File;
-use std::io::BufReader;
 use std::io::BufRead;
+use std::io::BufReader;
+use std::process;
 
 use challenge::utils::decode_hex;
-use challenge::xor::{search_single_char_key, repeating_key, xor};
+use challenge::xor::{repeating_key, search_single_char_key, xor};
 
 fn usage() {
     println!("Usage: find_single_single_char_xor_string <file>");

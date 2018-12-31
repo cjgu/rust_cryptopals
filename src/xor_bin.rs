@@ -1,5 +1,3 @@
-extern crate challenge;
-
 use std::env;
 
 use challenge::utils::{decode_hex, encode_hex};

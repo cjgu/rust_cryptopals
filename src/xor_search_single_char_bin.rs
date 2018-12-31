@@ -1,12 +1,10 @@
-extern crate challenge;
-
-use std::env;
 use std::char;
+use std::env;
 use std::process;
 
 use challenge::utils::decode_hex;
-use challenge::xor::search_single_char_key;
 use challenge::xor::repeating_key;
+use challenge::xor::search_single_char_key;
 use challenge::xor::xor;
 
 fn usage() {

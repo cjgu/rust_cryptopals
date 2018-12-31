@@ -1,10 +1,8 @@
-extern crate challenge;
-
 use std::env;
 use std::process;
 
-use challenge::utils::encode_hex;
 use challenge::aes_oracle::{detection_oracle_random_method, encrypt_random_method};
+use challenge::utils::encode_hex;
 
 fn usage() {
     println!("Usage: oracle_ecb <data>");

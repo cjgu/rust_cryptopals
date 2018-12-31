@@ -1,17 +1,16 @@
-extern crate challenge;
-
 use std::env;
 use std::process;
 
-use challenge::{utils, cookie};
-
+use challenge::{cookie, utils};
 
 fn usage() {
-    println!("Usage:
+    let usage_str = r#"
+Usage:
     ecb_cut_n_paste encrypt <email> <key>
     ecb_cut_n_paste decrypt <cookie> <key>
     ecb_cut_n_paste cut-n-paste <key>
-");
+"#;
+    println!("{}", usage_str);
 }
 
 pub fn main() {
@@ -29,14 +28,12 @@ pub fn main() {
         let encrypted = cookie::encrypt_cookie(&args[2], &key);
 
         println!("{:?}", utils::encode_hex(&encrypted));
-    }
-    else if args[1] == "decrypt" {
-        let cookie  = utils::decode_hex(&args[2]).expect("Invalid cookie");
+    } else if args[1] == "decrypt" {
+        let cookie = utils::decode_hex(&args[2]).expect("Invalid cookie");
         let key = utils::decode_hex(&args[3]).expect("Invalid hex key");
 
         println!("{:?}", cookie::decrypt_cookie(cookie, &key));
-    }
-    else if args[1] == "cut-n-paste" {
+    } else if args[1] == "cut-n-paste" {
         let key = utils::decode_hex(&args[2]).expect("Invalid hex key");
 
         let first = "aaaaaa@aa.com";
@@ -44,7 +41,7 @@ pub fn main() {
 
         let prefix = "XXXXXXXXXX";
         let admin = String::from("admin").into_bytes();
-        let admin_padded =  utils::pkcs_7_padding(&admin, 16);
+        let admin_padded = utils::pkcs_7_padding(&admin, 16);
         let admin_padded_str = String::from_utf8(admin_padded).expect("Bad utf");
 
         let cookie_2 = format!("{}{}", prefix, admin_padded_str);
@@ -57,8 +54,7 @@ pub fn main() {
         cutnpaste.append(&mut cutnpaste_2);
 
         println!("{:?}", cookie::decrypt_cookie(cutnpaste, &key));
-    }
-    else {
+    } else {
         println!("Invalid argument");
         usage();
         process::exit(-1);

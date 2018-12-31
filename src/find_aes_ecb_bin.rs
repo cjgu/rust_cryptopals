@@ -1,8 +1,6 @@
-extern crate challenge;
-
+use std::collections::HashSet;
 use std::env;
 use std::process;
-use std::collections::HashSet;
 
 use challenge::utils::{decode_hex, load_file_per_line};
 

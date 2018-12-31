@@ -2,6 +2,7 @@
 name = "crypto_pals"
 version = "0.1.0"
 authors = ["Carl Johan Gustavsson <cjg@prng.se>"]
+edition = "2018"
 
 [lib]
 name = "challenge"

@@ -1,7 +1,7 @@
 use openssl::symm;
 
-use xor::xor;
-use utils::pkcs_7_padding;
+use crate::xor::xor;
+use crate::utils::pkcs_7_padding;
 
 pub fn decrypt_128_ecb(key: &Vec<u8>, data: &Vec<u8>, pad: bool) -> Vec<u8> {
     assert!(key.len() == 16);

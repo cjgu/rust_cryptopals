@@ -1,7 +1,3 @@
-extern crate itertools;
-
-extern crate challenge;
-
 use std::env;
 use std::process;
 
@@ -36,10 +32,11 @@ fn find_key_size(ciphertext: &[u8]) -> usize {
                 &ciphertext[key_size * 2..key_size * 3].to_vec(),
             ),
         ];
-        let norm_avg_dist = distances
+        let sum_distances = distances
             .iter()
             .map(|&x| x as f32 / key_size as f32)
-            .fold(0.0, |acc, x| acc + x) / distances.len() as f32;
+            .fold(0.0, |acc, x| acc + x);
+        let norm_avg_dist = sum_distances / distances.len() as f32;
 
         if norm_avg_dist < min_norm_dist {
             min_norm_dist = norm_avg_dist;
