@@ -102,9 +102,9 @@ pub fn encode_b64(bytes: &Vec<u8>) -> String {
 fn b64_char_to_u8(c: char) -> u8 {
     let d = c as u8;
     match d {
-        65...90 => d - ('A' as u8),          // A-Z
-        97...122 => d - ('a' as u8) + 26,    // a-z
-        48...57 => d - ('0' as u8) + 2 * 26, // 0-9
+        65..=90 => d - ('A' as u8),          // A-Z
+        97..=122 => d - ('a' as u8) + 26,    // a-z
+        48..=57 => d - ('0' as u8) + 2 * 26, // 0-9
         43 => 62,                            // +
         47 => 63,                            // /
         61 => 0xFF,                          // =
