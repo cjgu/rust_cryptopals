@@ -10,7 +10,7 @@ fn usage() {
 }
 
 fn find_key_size(ciphertext: &[u8]) -> usize {
-    let mut min_norm_dist: f32 = 100 as f32;
+    let mut min_norm_dist: f32 = 100_f32;
     let mut min_key_size = 0;
 
     for key_size in 2..40 {
@@ -36,6 +36,7 @@ fn find_key_size(ciphertext: &[u8]) -> usize {
             .iter()
             .map(|&x| x as f32 / key_size as f32)
             .fold(0.0, |acc, x| acc + x);
+            
         let norm_avg_dist = sum_distances / distances.len() as f32;
 
         if norm_avg_dist < min_norm_dist {

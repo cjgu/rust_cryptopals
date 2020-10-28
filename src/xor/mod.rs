@@ -71,13 +71,13 @@ pub fn score_plaintext(plaintext: &Vec<u8>) -> u32 {
             97..=122 => 1, // a-z
             _ => 0,
         })
-        .fold(0, |acc, x| acc + x)
+        .sum()
 }
 
 pub fn hamming_distance(a: &Vec<u8>, b: &Vec<u8>) -> u32 {
     let c = xor(a, b);
 
-    c.iter().map(|&x| x.count_ones()).fold(0, |acc, x| acc + x)
+    c.iter().map(|&x| x.count_ones()).sum()
 }
 
 #[cfg(test)]

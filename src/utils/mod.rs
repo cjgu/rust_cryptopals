@@ -1,7 +1,7 @@
-use std::fs::File;
-use std::io::BufReader;
-use std::io::BufRead;
 use std::collections::HashSet;
+use std::fs::File;
+use std::io::BufRead;
+use std::io::BufReader;
 
 pub fn decode_hex(hex_str: &str) -> Option<Vec<u8>> {
     let len = hex_str.len();
@@ -28,11 +28,11 @@ pub fn decode_hex(hex_str: &str) -> Option<Vec<u8>> {
 }
 
 const HEX_MAP: [char; 16] = [
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
 ];
 
 pub fn encode_hex(bytes: &Vec<u8>) -> String {
-    assert!(bytes.len() > 0);
+    assert!(!bytes.is_empty());
     let mut out = Vec::with_capacity(bytes.len() * 2);
     for b in bytes.iter() {
         out.push(HEX_MAP[((b & 0xF0) >> 4) as usize] as u8);
@@ -102,12 +102,12 @@ pub fn encode_b64(bytes: &Vec<u8>) -> String {
 fn b64_char_to_u8(c: char) -> u8 {
     let d = c as u8;
     match d {
-        65..=90 => d - ('A' as u8),          // A-Z
-        97..=122 => d - ('a' as u8) + 26,    // a-z
-        48..=57 => d - ('0' as u8) + 2 * 26, // 0-9
-        43 => 62,                            // +
-        47 => 63,                            // /
-        61 => 0xFF,                          // =
+        65..=90 => d - b'A',          // A-Z
+        97..=122 => d - b'a' + 26,    // a-z
+        48..=57 => d - b'0' + 2 * 26, // 0-9
+        43 => 62,                     // +
+        47 => 63,                     // /
+        61 => 0xFF,                   // =
         _ => panic!("Invalid b64 char '{:?}'", d),
     }
 }

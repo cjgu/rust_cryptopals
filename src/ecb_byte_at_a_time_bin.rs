@@ -18,8 +18,7 @@ pub fn main() {
 
     if args[1] == "simple" {
         detection_oracle_ecb_extra();
-    }
-    else {
+    } else {
         detection_oracle_ecb_extra_and_random();
     }
 }
