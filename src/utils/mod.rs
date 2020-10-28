@@ -168,7 +168,11 @@ pub fn load_file_per_line(file_path: &str) -> Vec<String> {
 }
 
 fn pad_length(data_len: usize, block_size: usize) -> usize {
-    (block_size - (data_len % block_size)) % block_size
+    if data_len % block_size == 0 {
+        block_size
+    } else {
+        (block_size - (data_len % block_size)) % block_size
+    }
 }
 
 pub fn pkcs_7_padding(buf: &Vec<u8>, block_size: usize) -> Vec<u8> {
@@ -178,6 +182,26 @@ pub fn pkcs_7_padding(buf: &Vec<u8>, block_size: usize) -> Vec<u8> {
     output.resize(output_size, pad_char);
 
     output
+}
+
+pub fn pkcs_7_padding_validate(buf: &Vec<u8>, block_size: usize) -> Option<Vec<u8>> {
+    let pad_char = buf[buf.len() - 1];
+
+    let pad_length = pad_char as usize;
+
+    if pad_length > block_size {
+        return None;
+    }
+
+    let padding = &buf[buf.len() - pad_length..buf.len()];
+
+    for char in padding {
+        if char != &pad_char {
+            return None;
+        }
+    }
+
+    Some(buf[0..buf.len() - pad_length].to_vec())
 }
 
 pub fn count_duplicate_blocks(bytes: &[u8], block_size: usize) -> (u32, u32) {
@@ -305,13 +329,12 @@ mod tests {
 
     #[test]
     fn test_pad_length() {
-        assert_eq!(0, pad_length(16, 16));
+        assert_eq!(16, pad_length(16, 16));
         assert_eq!(1, pad_length(15, 16));
         assert_eq!(15, pad_length(17, 16));
         assert_eq!(12, pad_length(20, 16));
-        assert_eq!(0, pad_length(32, 16));
-        assert_eq!(0, pad_length(32, 16));
-        assert_eq!(0, pad_length(32, 1));
+        assert_eq!(16, pad_length(32, 16));
+        assert_eq!(1, pad_length(32, 1));
     }
 
     #[test]
@@ -326,6 +349,36 @@ mod tests {
     #[test]
     fn test_pkcs_7_pad_16() {
         let input = b"YELLOW SUBMARINE".to_vec();
-        assert_eq!(b"YELLOW SUBMARINE".to_vec(), pkcs_7_padding(&input, 16))
+        assert_eq!(
+            b"YELLOW SUBMARINE\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10"
+                .to_vec(),
+            pkcs_7_padding(&input, 16)
+        )
+    }
+
+    #[test]
+    fn test_pkcs_7_validate_1_valid() {
+        let input = b"ICE ICE BABY\x04\x04\x04\x04".to_vec();
+        let expected = b"ICE ICE BABY".to_vec();
+
+        assert_eq!(expected, pkcs_7_padding_validate(&input, 16).unwrap());
+    }
+
+    #[test]
+    fn test_pkcs_7_validate_2_invalid() {
+        let input = b"ICE ICE BABY\x05\x05\x05\x05".to_vec();
+        assert_eq!(true, pkcs_7_padding_validate(&input, 16).is_none());
+    }
+
+    #[test]
+    fn test_pkcs_7_validate_3_invalid() {
+        let input = b"ICE ICE BABY\x01\x02\x03\x04".to_vec();
+        assert_eq!(true, pkcs_7_padding_validate(&input, 16).is_none());
+    }
+
+    #[test]
+    fn test_pkcs_7_validate_4_invalid() {
+        let input = b"ICE ICE BABY\x01\x02\x03\x40".to_vec();
+        assert_eq!(true, pkcs_7_padding_validate(&input, 16).is_none());
     }
 }
