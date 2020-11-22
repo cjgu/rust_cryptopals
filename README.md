@@ -89,3 +89,8 @@ $ cargo run --bin ecb_cut_n_paste cut-n-paste <key>
 ```
 $ cargo run --bin ecb_byte_at_a_time harder
 ```
+
+### Challenge 16
+```
+$ cargo run --bin cbc_bitflip "aaaaaaaaaaaaaaaaaaaaa:admin<true"
+```

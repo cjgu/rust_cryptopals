@@ -57,6 +57,10 @@ name = "ecb_cut_n_paste"
 path = "src/ecb_cut_n_paste_bin.rs"
 
 [[bin]]
+name = "cbc_bitflip"
+path = "src/cbc_bitflip_bin.rs"
+
+[[bin]]
 name = "gen_key"
 path = "src/gen_key_bin.rs"
 
