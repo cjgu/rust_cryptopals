@@ -10,8 +10,8 @@ pub enum CipherMode {
     ECB,
 }
 
-pub fn detection_oracle_random_method(ciphertext: &Vec<u8>) -> CipherMode {
-    let (duplicates, chunks) = utils::count_duplicate_blocks(&ciphertext, 16);
+pub fn detection_oracle_random_method(ciphertext: &[u8]) -> CipherMode {
+    let (duplicates, chunks) = utils::count_duplicate_blocks(ciphertext, 16);
 
     println!("Duplicates: {:?}", duplicates);
     println!("Chunks: {:?}", chunks);
@@ -55,7 +55,6 @@ pub fn detection_oracle_ecb_extra() {
         println!("Detected non-ECB, bailing");
         return;
     }
-
 
     let mut decrypted: Vec<u8> = Vec::with_capacity(block_size);
 
@@ -163,7 +162,7 @@ pub fn detection_oracle_ecb_extra_and_random() {
         println!("Working on block no {:?}", block_no);
 
         let mut decrypted_block: Vec<u8> = Vec::with_capacity(block_size);
-        
+
         for block_pos in 1..block_size + 1 {
             let mut dict = HashMap::new();
 
@@ -210,30 +209,30 @@ pub fn detection_oracle_ecb_extra_and_random() {
     println!("Extra text: {:?}", extra_text);
 }
 
-pub fn encrypt_ecb_extra_and_random(data: &Vec<u8>, key: &Vec<u8>) -> Vec<u8> {
+pub fn encrypt_ecb_extra_and_random(data: &[u8], key: &[u8]) -> Vec<u8> {
     let mut prefix = random::random_prefix(8, 32);
 
     let mut extra = utils::decode_b64("Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK");
 
-    let mut plaintext = data.clone();
+    let mut plaintext = data.to_owned();
 
     plaintext.append(&mut extra);
     prefix.append(&mut plaintext);
 
-    aes::encrypt_128_ecb(&key, &prefix, true)
+    aes::encrypt_128_ecb(key, &prefix, true)
 }
 
-pub fn encrypt_ecb_extra(data: &Vec<u8>, key: &Vec<u8>) -> Vec<u8> {
+pub fn encrypt_ecb_extra(data: &[u8], key: &[u8]) -> Vec<u8> {
     let mut extra = utils::decode_b64("Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK");
 
-    let mut plaintext = data.clone();
+    let mut plaintext = data.to_owned();
 
     plaintext.append(&mut extra);
 
-    aes::encrypt_128_ecb(&key, &plaintext, true)
+    aes::encrypt_128_ecb(key, &plaintext, true)
 }
 
-pub fn encrypt_random_method(data: &Vec<u8>) -> Vec<u8> {
+pub fn encrypt_random_method(data: &[u8]) -> Vec<u8> {
     let key = random::random_key(16);
     assert!(key.len() == 16);
 
@@ -246,7 +245,7 @@ pub fn encrypt_random_method(data: &Vec<u8>) -> Vec<u8> {
     let mut prefix = random::random_prefix(5, 10);
     let mut postfix = random::random_prefix(5, 10);
 
-    let mut plaintext = data.clone();
+    let mut plaintext = data.to_owned();
 
     prefix.append(&mut plaintext);
     prefix.append(&mut postfix);

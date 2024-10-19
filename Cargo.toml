@@ -67,5 +67,5 @@ path = "src/gen_key_bin.rs"
 
 [dependencies]
 itertools="0.5.8"
-openssl = "0.10.30"
+openssl = "0.10.68"
 rand = "0.3"

@@ -14,29 +14,29 @@ fn find_key_size(ciphertext: &[u8]) -> usize {
     let mut min_key_size = 0;
 
     for key_size in 2..40 {
-        let distances = vec![
+        let distances = [
             hamming_distance(
-                &ciphertext[0..key_size].to_vec(),
-                &ciphertext[key_size..key_size * 2].to_vec(),
+                &ciphertext[0..key_size],
+                &ciphertext[key_size..key_size * 2],
             ),
             hamming_distance(
-                &ciphertext[key_size * 2..key_size * 3].to_vec(),
-                &ciphertext[key_size * 3..key_size * 4].to_vec(),
+                &ciphertext[key_size * 2..key_size * 3],
+                &ciphertext[key_size * 3..key_size * 4],
             ),
             hamming_distance(
-                &ciphertext[0..key_size].to_vec(),
-                &ciphertext[key_size * 3..key_size * 4].to_vec(),
+                &ciphertext[0..key_size],
+                &ciphertext[key_size * 3..key_size * 4],
             ),
             hamming_distance(
-                &ciphertext[0..key_size].to_vec(),
-                &ciphertext[key_size * 2..key_size * 3].to_vec(),
+                &ciphertext[0..key_size],
+                &ciphertext[key_size * 2..key_size * 3],
             ),
         ];
         let sum_distances = distances
             .iter()
             .map(|&x| x as f32 / key_size as f32)
             .fold(0.0, |acc, x| acc + x);
-            
+
         let norm_avg_dist = sum_distances / distances.len() as f32;
 
         if norm_avg_dist < min_norm_dist {

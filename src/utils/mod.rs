@@ -31,7 +31,7 @@ const HEX_MAP: [char; 16] = [
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
 ];
 
-pub fn encode_hex(bytes: &Vec<u8>) -> String {
+pub fn encode_hex(bytes: &[u8]) -> String {
     assert!(!bytes.is_empty());
     let mut out = Vec::with_capacity(bytes.len() * 2);
     for b in bytes.iter() {
@@ -49,16 +49,14 @@ const B64_MAP: [char; 64] = [
     '5', '6', '7', '8', '9', '+', '/',
 ];
 
-pub fn encode_b64(bytes: &Vec<u8>) -> String {
+pub fn encode_b64(bytes: &[u8]) -> String {
     let in_len = bytes.len();
-    let out_len: usize;
-
     let mod_len = in_len % 3;
-    if mod_len == 0 {
-        out_len = 4 * in_len / 3;
+    let out_len = if mod_len == 0 {
+        4 * in_len / 3
     } else {
-        out_len = 4 * (in_len / 3) + 4;
-    }
+        4 * (in_len / 3) + 4
+    };
 
     let mut out: Vec<u8> = vec![b'='; out_len];
 
@@ -175,16 +173,16 @@ fn pad_length(data_len: usize, block_size: usize) -> usize {
     }
 }
 
-pub fn pkcs_7_padding(buf: &Vec<u8>, block_size: usize) -> Vec<u8> {
+pub fn pkcs_7_padding(buf: &[u8], block_size: usize) -> Vec<u8> {
     let output_size = buf.len() + pad_length(buf.len(), block_size);
     let pad_char: u8 = (output_size - buf.len()) as u8;
-    let mut output = buf.clone();
+    let mut output = buf.to_vec();
     output.resize(output_size, pad_char);
 
     output
 }
 
-pub fn pkcs_7_padding_validate(buf: &Vec<u8>, block_size: usize) -> Option<Vec<u8>> {
+pub fn pkcs_7_padding_validate(buf: &[u8], block_size: usize) -> Option<Vec<u8>> {
     let pad_char = buf[buf.len() - 1];
 
     let pad_length = pad_char as usize;
@@ -367,18 +365,18 @@ mod tests {
     #[test]
     fn test_pkcs_7_validate_2_invalid() {
         let input = b"ICE ICE BABY\x05\x05\x05\x05".to_vec();
-        assert_eq!(true, pkcs_7_padding_validate(&input, 16).is_none());
+        assert!(pkcs_7_padding_validate(&input, 16).is_none());
     }
 
     #[test]
     fn test_pkcs_7_validate_3_invalid() {
         let input = b"ICE ICE BABY\x01\x02\x03\x04".to_vec();
-        assert_eq!(true, pkcs_7_padding_validate(&input, 16).is_none());
+        assert!(pkcs_7_padding_validate(&input, 16).is_none());
     }
 
     #[test]
     fn test_pkcs_7_validate_4_invalid() {
         let input = b"ICE ICE BABY\x01\x02\x03\x40".to_vec();
-        assert_eq!(true, pkcs_7_padding_validate(&input, 16).is_none());
+        assert!(pkcs_7_padding_validate(&input, 16).is_none());
     }
 }

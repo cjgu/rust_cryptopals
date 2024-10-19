@@ -49,17 +49,15 @@ pub fn profile_for(email: &str) -> String {
     encode_querystring(items)
 }
 
-pub fn encrypt_cookie(email: &str, key: &Vec<u8>) -> Vec<u8> {
+pub fn encrypt_cookie(email: &str, key: &[u8]) -> Vec<u8> {
     let profile = profile_for(email);
     println!("Profile: {:?}", profile);
     let profile_bytes = profile.into_bytes();
 
-    let encrypted = aes::encrypt_128_ecb(key, &profile_bytes, true);
-
-    encrypted
+    aes::encrypt_128_ecb(key, &profile_bytes, true)
 }
 
-pub fn decrypt_cookie(cookie: Vec<u8>, key: &Vec<u8>) -> Vec<KV> {
+pub fn decrypt_cookie(cookie: Vec<u8>, key: &[u8]) -> Vec<KV> {
     let encoded = aes::decrypt_128_ecb(key, &cookie, true);
     let querystring = String::from_utf8(encoded).expect("Invalid string");
     parse_querystring(&querystring)

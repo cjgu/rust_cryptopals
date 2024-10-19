@@ -21,7 +21,7 @@ pub fn main() {
     }
 }
 
-fn encrypt(key: &Vec<u8>, iv: &Vec<u8>, input: &str) -> Vec<u8> {
+fn encrypt(key: &[u8], iv: &[u8], input: &str) -> Vec<u8> {
     // quote ; and = in input
     let input = input.replace(";", "%3B").replace("=", "%3D");
 
@@ -34,28 +34,22 @@ fn encrypt(key: &Vec<u8>, iv: &Vec<u8>, input: &str) -> Vec<u8> {
     );
     let padded = utils::pkcs_7_padding(&input.into_bytes(), 16);
 
-    let ciphertext = aes::encrypt_128_cbc(&key, &padded, &iv, false);
-
-    ciphertext
+    aes::encrypt_128_cbc(key, &padded, iv, false)
 }
 
 fn check_admin(input: &str) -> bool {
     let map: HashMap<_, _> = input
         .split(";")
-        .into_iter()
         .map(|s| {
             let parts: Vec<&str> = s.split("=").collect();
             (parts[0], parts[1])
         })
         .collect();
 
-    match map.get("admin") {
-        Some(&"true") => true,
-        _ => false,
-    }
+    matches!(map.get("admin"), Some(&"true"))
 }
 
-fn decrypt_and_verify_admin(key: &Vec<u8>, iv: &Vec<u8>, ciphertext: &Vec<u8>) -> bool {
+fn decrypt_and_verify_admin(key: &[u8], iv: &[u8], ciphertext: &[u8]) -> bool {
     let plaintext = aes::decrypt_128_cbc(key, ciphertext, iv);
     println!("decrypted binary: {:?}", plaintext);
     let padded_str = String::from_utf8_lossy(&plaintext);
@@ -69,7 +63,7 @@ fn cbc_bitflip_attack(input: &str) -> bool {
     let key = random::random_key(16);
     let iv = random::random_key(16);
 
-    let mut ciphertext = encrypt(&key, &iv, &input);
+    let mut ciphertext = encrypt(&key, &iv, input);
 
     // modify ciphertext
     //
@@ -103,21 +97,21 @@ mod tests {
 
     #[test]
     fn test_check_admin_1() {
-        assert_eq!(true, check_admin("asdf=1;admin=true;qwerty=2"));
+        assert!(check_admin("asdf=1;admin=true;qwerty=2"));
     }
 
     #[test]
     fn test_check_admin_2() {
-        assert_eq!(false, check_admin("asdf=1;admin=false;qwerty=2"));
+        assert!(!check_admin("asdf=1;admin=false;qwerty=2"));
     }
 
     #[test]
     fn test_check_admin_3() {
-        assert_eq!(false, check_admin("asdf=1;qwerty=2"));
+        assert!(!check_admin("asdf=1;qwerty=2"));
     }
 
     #[test]
     fn test_cbc_bitflip_attack() {
-        assert_eq!(true, cbc_bitflip_attack("aaaaaaaaaaaaaaaaaaaaa:admin<true"));
+        assert!(cbc_bitflip_attack("aaaaaaaaaaaaaaaaaaaaa:admin<true"));
     }
 }

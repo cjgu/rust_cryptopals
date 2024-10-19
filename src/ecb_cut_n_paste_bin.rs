@@ -37,7 +37,7 @@ pub fn main() {
         let key = utils::decode_hex(&args[2]).expect("Invalid hex key");
 
         let first = "aaaaaa@aa.com";
-        let encrypted = cookie::encrypt_cookie(&first, &key);
+        let encrypted = cookie::encrypt_cookie(first, &key);
 
         let prefix = "XXXXXXXXXX";
         let admin = String::from("admin").into_bytes();
